@@ -53,6 +53,7 @@ def dump(directories: Iterable[str], file_types: Iterable[str], caption_prefix: 
 
 if __name__ == "__main__":
     import argparse
+    import sys
 
     parser = argparse.ArgumentParser(
         description="Dump the contents of specified codebases (directories) into a single output file."
@@ -60,8 +61,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-o", "--output",
         type=str,
-        required=True,
-        help="Path to the output file where the dumped code will be written."
+        help="Path to the output file where the dumped code will be written. If unprovided, the large string is output by the program."
     )
     parser.add_argument(
         "-paths",
@@ -90,8 +90,9 @@ if __name__ == "__main__":
     # Call the dump function with the parsed arguments.
     dumped_code = dump(directories, file_types, ignore_file_read_errors=args.ignore_file_read_errors)
 
-    # Write the output to the specified file.
-    with open(args.output, "w") as out_file:
-        out_file.write(dumped_code)
-
-
+    if args.output:
+        # Write the output to the specified file.
+        with open(args.output, "w") as out_file:
+            out_file.write(dumped_code)
+    else:
+        sys.stdout.write(dumped_code)
