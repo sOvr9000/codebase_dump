@@ -46,10 +46,52 @@ def dump(directories: list[str], file_types: Iterable[str], caption_prefix: str 
                 # Include name of `directory` but remove the preceding directories if `include_full_path` is True.
                 if not include_full_path:
                     fpath = os.path.relpath(fpath, directory_parent)
-                captions.append(f'{caption_prefix} {fpath}')
+                captions.append(f'{caption_prefix}{fpath}')
     return concatenate_code(code, captions)
 
 
 
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Dump the contents of specified codebases (directories) into a single output file."
+    )
+    parser.add_argument(
+        "-o", "--output",
+        type=str,
+        required=True,
+        help="Path to the output file where the dumped code will be written."
+    )
+    parser.add_argument(
+        "-paths",
+        type=str,
+        required=True,
+        help='Comma-separated list of directories to search (e.g. "path/to/codebase1,path/to/codebase2").'
+    )
+    parser.add_argument(
+        "-ftypes",
+        type=str,
+        required=True,
+        help='Comma-separated list of file types to include (e.g. ".py,.js,.php").'
+    )
+    parser.add_argument(
+        "--ignore-file-read-errors",
+        action="store_true",
+        help="Continue processing even if there are errors reading some files."
+    )
+
+    args = parser.parse_args()
+
+    # Split the comma-separated lists and remove any accidental whitespace.
+    directories = [p.strip() for p in args.paths.split(",") if p.strip()]
+    file_types = [ft.strip() for ft in args.ftypes.split(",") if ft.strip()]
+
+    # Call the dump function with the parsed arguments.
+    dumped_code = dump(directories, file_types, ignore_file_read_errors=args.ignore_file_read_errors)
+
+    # Write the output to the specified file.
+    with open(args.output, "w") as out_file:
+        out_file.write(dumped_code)
 
 
