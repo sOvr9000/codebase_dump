@@ -1,5 +1,5 @@
 
-# A simple codebase dumper which assembles the contents of any specified file types under any directory as one large string, containing captions/headers for each file.
+# A simple codebase dumper which assembles the contents of all files, given whitelisted file types, under all given directories as one large string, containing captions/headers for each file.
 
 import os
 from typing import Iterable
@@ -20,12 +20,12 @@ def get_code_from_file(fpath: str, ignore_errors: bool = False) -> str:
 
 
 
-def concatenate_code(code_list: list[str], captions: list[str]) -> str:
+def concatenate_code(code_list: Iterable[str], captions: Iterable[str]) -> str:
     return '\n\n'.join(f'{caption}\n\n{code}' for caption, code in zip(captions, code_list))
 
 
 
-def dump(directories: list[str], file_types: Iterable[str], caption_prefix: str = 'FILE ', include_full_path: bool = False, ignore_file_read_errors: bool = False) -> str:
+def dump(directories: Iterable[str], file_types: Iterable[str], caption_prefix: str = 'FILE ', include_full_path: bool = False, ignore_file_read_errors: bool = False) -> str:
     '''
     Dumps the contents of the specified file types under the specified directories as a single string.
     '''
