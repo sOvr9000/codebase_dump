@@ -4,12 +4,14 @@ A simple codebase dumper which assembles the contents of all files, given whitel
 ## Example usage
 Basic usage:
 ```python
-from codebase_dump import dump
+import codebase_dump as cbdump
 
 dirpaths = ['path/to/codebase1', 'path/to/codebase2']
 file_types = ['.py', '.js', '.php']
+ignore_file_read_errors = True
+caption_prefix = 'FILE '
 
-code = dump(dirpaths, file_types)
+code = cbdump.dump(dirpaths, file_types, ignore_file_read_errors=ignore_file_read_errors, caption_prefix=caption_prefix)
 
 print(code)
 ```
